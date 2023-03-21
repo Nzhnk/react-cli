@@ -1,15 +1,28 @@
+/*
+ * @Author: ailoman
+ * @Date: 2023-03-21 10:04:23
+ * @LastEditTime: 2023-03-21 14:49:22
+ * @LastEditors: ailoman
+ * @FilePath: /react-cli-temp/src/index.tsx
+ */
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
+import { Provider } from 'react-redux';
+import { store } from '@/features';
+
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+
+import './reset.css';
+import './index.css';
+import App from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );
 

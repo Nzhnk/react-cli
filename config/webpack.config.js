@@ -112,18 +112,18 @@ module.exports = function (webpackEnv) {
         loader: MiniCssExtractPlugin.loader,
         // css is located in `static/css`, use '../../' to locate index.html folder
         // in production `paths.publicUrlOrPath` can be a relative path
-        options: paths.publicUrlOrPath.startsWith('.')
-          ? { publicPath: '../../' }
-          : {},
+        options: paths.publicUrlOrPath.startsWith('.') ? { publicPath: '../../' } : {},
       },
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
       },
+
       {
         // Options for PostCSS as we reference these options twice
         // Adds vendor prefixing based on your specified browser support in
         // package.json
+        // 根据package.json中指定的浏览器支持情况添加供应商前缀
         loader: require.resolve('postcss-loader'),
         options: {
           postcssOptions: {
@@ -219,8 +219,12 @@ module.exports = function (webpackEnv) {
       // webpack uses `publicPath` to determine where the app is being served from.
       // It requires a trailing slash, or the file assets will get an incorrect path.
       // We inferred the "public path" (such as / or /my-project) from homepage.
+      // webpack 使用 `publicPath` 来决定应用从哪里被服务。
+      // 它需要一个尾随斜杠，否则文件资源将获得错误的路径。
+      // 我们从 homepage 推断出 “public path”（例如 / 或 /my-project）。
       publicPath: paths.publicUrlOrPath,
       // Point sourcemap entries to original disk location (format as URL on Windows)
+      // 将 sourcemap 条目指向原始磁盘位置（在 Windows 上格式化为 URL）
       devtoolModuleFilenameTemplate: isEnvProduction
         ? info =>
             path
@@ -257,6 +261,8 @@ module.exports = function (webpackEnv) {
               // into invalid ecma 5 code. This is why the 'compress' and 'output'
               // sections only apply transformations that are ecma 5 safe
               // https://github.com/facebook/create-react-app/pull/4234
+              // 我们希望 terser 解析 ecma 8 代码。但是，我们不希望它应用任何将有效的 ecma 5 代码转换为无效的 ecma 5 代码的缩小步骤。
+              // 这就是为什么 'compress' 和 'output' 部分只适用于 ecma 5 安全的转换的原因
               ecma: 8,
             },
             compress: {
@@ -266,17 +272,20 @@ module.exports = function (webpackEnv) {
               // https://github.com/facebook/create-react-app/issues/2376
               // Pending further investigation:
               // https://github.com/mishoo/UglifyJS2/issues/2011
+              // 由于 Uglify 似乎破坏有效代码的问题而被禁用：
               comparisons: false,
               // Disabled because of an issue with Terser breaking valid code:
               // https://github.com/facebook/create-react-app/issues/5250
               // Pending further investigation:
               // https://github.com/terser-js/terser/issues/120
+              // 由于 Terser 破坏有效代码的问题而被禁用：
               inline: 2,
             },
             mangle: {
               safari10: true,
             },
             // Added for profiling in devtools
+            // 用于 devtools 中的分析
             keep_classnames: isEnvProductionProfile,
             keep_fnames: isEnvProductionProfile,
             output: {
@@ -284,11 +293,13 @@ module.exports = function (webpackEnv) {
               comments: false,
               // Turned on because emoji and regex is not minified properly using default
               // https://github.com/facebook/create-react-app/issues/2488
+              // 打开，因为 emoji 和 regex 使用默认值无法正确缩小
               ascii_only: true,
             },
           },
         }),
         // This is only used in production mode
+        // 仅在生产模式下使用
         new CssMinimizerPlugin(),
       ],
     },
@@ -297,6 +308,9 @@ module.exports = function (webpackEnv) {
       // We placed these paths second because we want `node_modules` to "win"
       // if there are any conflicts. This matches Node resolution mechanism.
       // https://github.com/facebook/create-react-app/issues/253
+      // 这允许您设置 webpack 查找模块的回退位置。
+      // 我们将这些路径放在第二位，因为我们希望如果有任何冲突，“node_modules”将“赢”。
+      // 这与 Node 解析机制匹配。
       modules: ['node_modules', paths.appNodeModules].concat(
         modules.additionalModulePaths || []
       ),
@@ -319,6 +333,7 @@ module.exports = function (webpackEnv) {
           'scheduler/tracing': 'scheduler/tracing-profiling',
         }),
         ...(modules.webpackAliases || {}),
+        '@': paths.appSrc,
       },
       plugins: [
         // Prevents users from importing files from outside of src/ (or node_modules/).
