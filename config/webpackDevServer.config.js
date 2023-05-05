@@ -36,11 +36,24 @@ module.exports = function (proxy, allowedHost) {
     // Note: ["localhost", ".localhost"] will support subdomains - but we might
     // want to allow setting the allowedHosts manually for more complex setups
     allowedHosts: disableFirewall ? 'all' : [allowedHost],
+    /**
+     * config.headers = {
+      'Access-Control-Allow-Origin': '*'
+    }
+    config.historyApiFallback = true
+    config.hot = false
+    // 升级到 webpack5 后，watchContentBase 和 watchFiles 都不需要了
+    // config.watchContentBase = false
+    // config.watchFiles = false
+    config.liveReload = false
+     */
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': '*',
       'Access-Control-Allow-Headers': '*',
     },
+    liveReload: false,
+    hot: false,
     // Enable gzip compression of generated files.
     compress: true,
     static: {
@@ -93,35 +106,36 @@ module.exports = function (proxy, allowedHost) {
 
     https: getHttpsConfig(),
     host,
-    historyApiFallback: {
-      // Paths with dots should still use the history fallback.
-      // See https://github.com/facebook/create-react-app/issues/387.
-      disableDotRule: true,
-      index: paths.publicUrlOrPath,
-    },
+    historyApiFallback: true,
+    // historyApiFallback: {
+    //   // Paths with dots should still use the history fallback.
+    //   // See https://github.com/facebook/create-react-app/issues/387.
+    //   disableDotRule: true,
+    //   index: paths.publicUrlOrPath,
+    // },
     // `proxy` is run between `before` and `after` `webpack-dev-server` hooks
     proxy,
     onBeforeSetupMiddleware(devServer) {
       // Keep `evalSourceMapMiddleware`
       // middlewares before `redirectServedPath` otherwise will not have any effect
       // This lets us fetch source contents from webpack for the error overlay
-      devServer.app.use(evalSourceMapMiddleware(devServer));
+      devServer.app.use(evalSourceMapMiddleware(devServer))
 
       if (fs.existsSync(paths.proxySetup)) {
         // This registers user provided middleware for proxy reasons
-        require(paths.proxySetup)(devServer.app);
+        require(paths.proxySetup)(devServer.app)
       }
     },
     onAfterSetupMiddleware(devServer) {
       // Redirect to `PUBLIC_URL` or `homepage` from `package.json` if url not match
-      devServer.app.use(redirectServedPath(paths.publicUrlOrPath));
+      devServer.app.use(redirectServedPath(paths.publicUrlOrPath))
 
       // This service worker file is effectively a 'no-op' that will reset any
       // previous service worker registered for the same host:port combination.
       // We do this in development to avoid hitting the production cache if
       // it used the same host and port.
       // https://github.com/facebook/create-react-app/issues/2272#issuecomment-302832432
-      devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath));
+      devServer.app.use(noopServiceWorkerMiddleware(paths.publicUrlOrPath))
     },
-  };
+  }
 };
