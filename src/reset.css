@@ -120,3 +120,7 @@ legend {
 body {
   color: #000;
 }
+
+iframe {
+  display: none !important;
+}
