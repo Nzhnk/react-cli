@@ -1,3 +1,10 @@
+/*
+ * @Author: ailoman
+ * @Date: 2023-03-21 10:04:28
+ * @LastEditTime: 2023-05-06 11:19:17
+ * @LastEditors: ailoman
+ * @FilePath: /react-cli-temp/src/react-app-env.d.ts
+ */
 /// <reference types="node" />
 /// <reference types="react" />
 /// <reference types="react-dom" />
@@ -68,4 +75,15 @@ declare module '*.module.scss' {
 declare module '*.module.sass' {
   const classes: { readonly [key: string]: string };
   export default classes;
+}
+
+declare namespace globalThis {
+  //设置全局属性
+  interface Window {
+    //window对象属性
+    audience: string
+    modalTip: Function
+    checkLicloudToken: Function
+    authLogOut: Function
+  }
 }
