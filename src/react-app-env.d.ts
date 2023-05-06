@@ -1,7 +1,7 @@
 /*
  * @Author: ailoman
  * @Date: 2023-03-21 10:04:28
- * @LastEditTime: 2023-05-06 11:19:17
+ * @LastEditTime: 2023-05-06 13:28:10
  * @LastEditors: ailoman
  * @FilePath: /react-cli-temp/src/react-app-env.d.ts
  */
@@ -85,5 +85,6 @@ declare namespace globalThis {
     modalTip: Function
     checkLicloudToken: Function
     authLogOut: Function
+    globalDataStore: any
   }
 }
